@@ -1,1 +1,3 @@
-console.log("Hello, world!");
+import Keyboard from "./classes/Keyboard";
+
+new Keyboard().init();

@@ -9,12 +9,6 @@
     }
 }
 
-.btn {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-}
-
 .form {
     display: flex;
     flex-direction: column;
@@ -60,5 +54,205 @@
         background-color: $purple;
         color: $white;
         border-radius: 5px;
+    }
+}
+
+.modal-window {
+    position: fixed;
+    z-index: 9999999999999;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba($black, .4);
+    overflow: auto;
+
+    &__inner {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+    }
+
+    &__content {
+        width: 60%;
+        background-color: $white;
+        padding: 10px;
+        border-radius: 5px;
+    }
+}
+
+.typing-workspace {
+    &__top {
+        display: grid;
+        grid-template-columns: .2fr 1fr .2fr;
+    }
+
+    &__fingers {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__progress {
+        padding: 10px;
+        border-bottom: 1px solid $lightGrey;
+        display: grid;
+        grid-template-columns: 1fr .1fr;
+        gap: 10px;
+
+        &-repeat {
+            background-color: $purple;
+            border-radius: 5px;
+            color: $white;
+            padding: 10px;
+        }
+
+        &-line {
+            height: 8px;
+            border-radius: 5px;
+            background-color: $lightGrey;
+
+            &-inner {
+                height: 100%;
+                border-radius: inherit;
+                width: 32%;
+                background-color: $purple;
+            }
+        }
+
+        &-res {
+            margin-right: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            &-content {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+
+    &__line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &-text {
+            padding-right: 10px;
+
+            &-num {
+                font-size: 12px;
+                color: $grey;
+            }
+        }
+    }
+
+    &__content {
+        border: 1px solid $lightGrey;
+        height: 100%;
+    }
+
+    &__text-wrapper {
+        box-shadow: inset 0 5px 5px -4px $lightGrey;
+        padding: 10px;
+    }
+
+    &__bottom {
+        margin-top: 25px;
+    }
+
+    &__finger {
+        display: flex;
+        align-items: center;
+
+        &:not(:last-child) {
+            margin-bottom: 5px;
+        }
+
+        &-circle {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        &-name {
+            font-size: 14px;
+            user-select: none;
+        }
+    }
+}
+
+.text-keys {
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+.key {
+    height: 50px;
+    border-radius: 5px;
+    padding: 10px;
+    display: flex;
+    align-items: flex-end;
+    font-size: 18px;
+
+    &[data-key=Tab] {
+        width: 135px;
+    }
+
+    &[data-key=CapsLock] {
+        width: 150px;
+    }
+
+    &[data-key=ShiftLeft] {
+        width: 175px;
+    }
+
+    &[data-key=Space] {
+        grid-column-start: 4;
+        grid-column-end: 10;
+    }
+
+    &[data-key=Enter] {
+        grid-column-start: 13;
+        grid-column-end: 15;
+    }
+
+    &[data-key=ControlLeft] {
+        width: 110px;
+    }
+
+    &[data-key=AltLeft] {
+        width: 100px;
+    }
+
+    &--empty {
+        font-size: 14px;
+        border: 1px solid $lightGrey;
+        color: $lightGrey;
+    }
+
+    &--completed {
+        background-color: $green;
+        color: $white;
+    }
+}
+
+.keyboard {
+    margin-right: auto;
+    margin-left: auto;
+
+    &__keys {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    &__row-keys {
+        display: grid;
+        grid-template-columns: repeat(14, 1fr);
+        gap: 2px;
+        justify-content: center;
     }
 }

@@ -37,3 +37,38 @@ h6 {
     padding: 0 10px;
     margin: 0 auto;
 }
+
+.finger {
+    &1 {
+        background-color: $finger1;
+    }
+    
+    &2 {
+        background-color: $finger2;
+    }
+
+    &3 {
+        background-color: $finger3;
+    }
+
+    &4 {
+        background-color: $finger4;
+    }
+
+    &5 {
+        background-color: $finger5;
+    }
+
+    &6 {
+        background-color: $finger6;
+    }
+}
+
+.btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
