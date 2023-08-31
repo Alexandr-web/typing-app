@@ -84,7 +84,7 @@
 .typing-workspace {
     &__top {
         display: grid;
-        grid-template-columns: .2fr 1fr .2fr;
+        grid-template-columns: .2fr 1fr;
     }
 
     &__fingers {
@@ -196,6 +196,22 @@
     display: flex;
     align-items: flex-end;
     font-size: 18px;
+    position: relative;
+    transition: transform .07s;
+
+    &::before {
+        content: "";
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+        background-color: rgba($black, .1);
+        top: 0;
+        left: 0;
+        transition: opacity .3s;
+        opacity: 0;
+    }
 
     &[data-key=Tab] {
         width: 135px;
@@ -207,6 +223,11 @@
 
     &[data-key=ShiftLeft] {
         width: 175px;
+    }
+
+    &[data-key=ShiftRight] {
+        grid-column-start: 12;
+        grid-column-end: 15;
     }
 
     &[data-key=Space] {
@@ -231,6 +252,14 @@
         font-size: 14px;
         border: 1px solid $lightGrey;
         color: $lightGrey;
+    }
+
+    &--pressed {
+        transform: scale(0.96);
+
+        &::before {
+            opacity: 1;
+        }
     }
 
     &--completed {
