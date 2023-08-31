@@ -1,0 +1,1 @@
+(()=>{var __webpack_modules__={"./src/js/index.js":()=>{eval('console.log("Hello, world!");\n\n//# sourceURL=webpack://typing_app/./src/js/index.js?')}},__webpack_exports__={};__webpack_modules__["./src/js/index.js"]()})();

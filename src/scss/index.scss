@@ -1,0 +1,64 @@
+@import "./_global";
+
+.section {
+    padding: 15px 0;
+
+    &__title {
+        margin-bottom: 25px;
+        font-weight: 600;
+    }
+}
+
+.btn {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 650px;
+    margin: 0 auto;
+
+    &__label {
+        margin-bottom: 5px;
+        display: block;
+        font-size: 14px;
+        color: $grey;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+
+        &:not(:last-child) {
+            margin-bottom: 15px;
+        }
+    }
+
+    &__input {
+        padding: 10px;
+        border: 1px solid $lightGrey;
+        transition: border-color .3s;
+        border-radius: 5px;
+
+        &:focus {
+            border-color: $purple;
+        }
+    }
+
+    &__textarea {
+        min-height: 250px;
+        resize: vertical;
+    }
+
+    &__submit {
+        display: block;
+        margin: 0 auto;
+        padding: 10px;
+        background-color: $purple;
+        color: $white;
+        border-radius: 5px;
+    }
+}
