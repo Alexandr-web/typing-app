@@ -9,7 +9,7 @@ export default class ModalWindow {
         this.modalWindow.addEventListener("click", (e) => {
             const target = e.target;
 
-            if (target.classList.contains("modal-window") || target.classList.contains("modal-window__inner")) {
+            if (target.classList.contains("modal-window") || target.classList.contains("modal-window__inner") || target.classList.contains("confetti-canvas")) {
                 if (this.callbackWhenHide instanceof Function) {
                     this.callbackWhenHide();
                 }

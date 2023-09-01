@@ -7,6 +7,7 @@ export default class TypingLogic {
         this.btnRepeat = document.querySelector(".typing-workspace__progress-repeat");
         this.progressLine = document.querySelector(".typing-workspace__progress-line-inner");
         this.countCompletedLinesEl = document.querySelector(".typing-workspace__progress-completed");
+        this.canvasConfetti = document.querySelector("#confetti");
         this.end = true;
         this.text = "";
         this.textData = [];
@@ -113,6 +114,8 @@ export default class TypingLogic {
 
         this.end = false;
 
+        this.canvasConfetti.classList.remove("show-opacity");
+
         this._setProgress();
         this._renderCountCompletedLines();
         this._renderText();
@@ -153,6 +156,7 @@ export default class TypingLogic {
                 this.textData[findActiveIdxSentence + 1].letters[0].active = true;
             } else {
                 console.log("finish");
+                this.canvasConfetti.classList.add("show-opacity");
     
                 this.end = true;
             }
@@ -189,6 +193,8 @@ export default class TypingLogic {
     }
 
     _typingHandler(e, keyEls) {
+        e.preventDefault();
+
         if (this.end) {
             return;
         }

@@ -24,5 +24,8 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-stream": "^7.0.0"
+  },
+  "dependencies": {
+    "confetti-js": "0.0.18"
   }
 }
