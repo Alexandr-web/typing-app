@@ -1,3 +1,3 @@
-import Keyboard from "./classes/Keyboard";
+import TypingLogic from "./classes/TypingLogic";
 
-new Keyboard().init();
+new TypingLogic().init();
