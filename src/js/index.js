@@ -1,3 +1,5 @@
-import TypingLogic from "./classes/TypingLogic";
+import addText from "./scripts/addText";
 
-new TypingLogic().init();
+window.addEventListener("load", () => {
+    addText();
+});

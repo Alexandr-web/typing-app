@@ -59,13 +59,14 @@
 
 .modal-window {
     position: fixed;
-    z-index: 9999999999999;
+    z-index: 99999;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
     background-color: rgba($black, .4);
     overflow: auto;
+    display: none;
 
     &__inner {
         display: flex;
@@ -88,6 +89,12 @@
     }
 
     &__fingers {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__list-lines {
+        gap: 5px;
         display: flex;
         flex-direction: column;
     }
@@ -134,7 +141,7 @@
 
     &__line {
         display: flex;
-        align-items: center;
+        align-items: first baseline;
         justify-content: space-between;
 
         &-text {
@@ -142,7 +149,7 @@
 
             &-num {
                 font-size: 12px;
-                color: $grey;
+                color: $redGrey;
             }
         }
     }
@@ -230,7 +237,7 @@
     }
 
     &[data-key=Space] {
-        grid-column-start: 4;
+        grid-column-start: 5;
         grid-column-end: 10;
     }
 
@@ -244,6 +251,14 @@
     }
 
     &[data-key=AltLeft] {
+        width: 100px;
+    }
+
+    &[data-key=ControlLeft] {
+        grid-column-start: 2;
+    }
+
+    &[data-key=ControlRight] {
         width: 100px;
     }
 
@@ -262,8 +277,7 @@
     }
 
     &--completed {
-        background-color: $green;
-        color: $white;
+        color: $green;
     }
 }
 
@@ -283,4 +297,8 @@
         gap: 2px;
         justify-content: center;
     }
+}
+
+.show {
+    display: block;
 }

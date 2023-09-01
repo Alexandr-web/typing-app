@@ -1,14 +1,14 @@
 import keys from "../helpers/keys";
 
 export default class TypingLogic {
-    constructor(text = "Hello, world!\nHi, world!\nYeah, world!") {
+    constructor() {
         this.listText = document.querySelector(".typing-workspace__list-lines");
         this.listKeys = document.querySelector(".keyboard__keys");
         this.btnRepeat = document.querySelector(".typing-workspace__progress-repeat");
         this.progressLine = document.querySelector(".typing-workspace__progress-line-inner");
         this.countCompletedLinesEl = document.querySelector(".typing-workspace__progress-completed");
-        this.end = false;
-        this.text = text;
+        this.end = true;
+        this.text = "";
         this.textData = [];
         this.ignoreKeys = ["Tab", "CapsLock", "ShiftLeft", "ShiftRight", "ControlLeft", "ControlRight", "MetaLeft", "MetaRight", "AltLeft", "AltRight", "ContextMenu"];
     }
@@ -47,8 +47,7 @@ export default class TypingLogic {
             const HTMLLineStr = `
                 <li class="typing-workspace__line" data-line-idx="${idx}">
                     <p class="typing-workspace__line-text text-keys">
-                        <span class="key--completed"></span>
-                        <span class="typing-workspace__line-text-not-completed">${sentence}</span>
+                        <span class="key--completed"></span><span class="typing-workspace__line-text-not-completed">${sentence}</span>
                     </p>
                     <span class="typing-workspace__line-text-num">${idx + 1}</span>
                 </li>
@@ -58,9 +57,8 @@ export default class TypingLogic {
         });
     }
 
-    _fillTextData() {
-        this.textData = this
-            .text
+    fillTextData(text) {
+        this.textData = text
             .split("\n")
             .reduce((acc, sentence, idx) => {
                 const letters = sentence
@@ -76,6 +74,11 @@ export default class TypingLogic {
                 
                 return acc;
             }, []);
+
+        this.end = false;
+
+        this._renderText();
+        this._renderCountCompletedLines();
     }
 
     _setPressedKey(els, idx) {
@@ -85,30 +88,34 @@ export default class TypingLogic {
     }
 
     _setProgress() {
-        const completedLines = this.textData.filter(({ completed, }) => completed).length;
-        const allLines = this.textData.length;
-        const progress = Math.ceil((completedLines / allLines) * 100);
+        const completedLetters = this.textData.reduce((count, { letters, }) => count += letters.filter(({ completed, }) => completed).length, 0);
+        const allLetters = this.textData.reduce((count, { letters }) => count += letters.length, 0);
+        const progress = (completedLetters / allLetters) * 100;
 
         this.progressLine.style.width = `${progress}%`;
     }
 
     _setRepeat() {
-        this.btnRepeat.addEventListener("click", () => {
-            this.textData.forEach((sentence, idx) => {
-                sentence.active = idx === 0;
-                sentence.completed = false;
-                sentence.letters.forEach((letter, index) => {
-                    letter.active = index === 0;
-                    letter.completed = false;
-                });
+        this.btnRepeat.addEventListener("click", this.clearTextData.bind(this));
+    }
+
+    clearTextData() {
+        this.textData.forEach((sentence, idx) => {
+            sentence.active = idx === 0;
+            sentence.completed = false;
+            sentence.letters.forEach((letter) => {
+                letter.active = false;
+                letter.completed = false;
             });
-
-            this.end = false;
-
-            this._setProgress();
-            this._renderCountCompletedLines();
-            this._renderText();
         });
+
+        this.textData[0].letters[0].active = true;
+
+        this.end = false;
+
+        this._setProgress();
+        this._renderCountCompletedLines();
+        this._renderText();
     }
 
     _checkTyping(pressedKey) {
@@ -162,40 +169,46 @@ export default class TypingLogic {
         const notCompletedKeysEl = elLine.querySelector(".typing-workspace__line-text-not-completed");
         const completedLetters = sentenceData.letters.filter(({ completed, }) => completed);
         const notCompletedLetters = sentenceData.letters.filter(({ completed, }) => !completed);
+        const strCompletedLetters = completedLetters.reduce((str, { letter, }) => str += letter, "");
+        const strNotCompletedLetters = notCompletedLetters.reduce((str, { letter, }) => str += letter, "");
 
-        completedKeysEl.textContent = completedLetters.reduce((str, { letter, }) => str += letter, "");
-        notCompletedKeysEl.textContent = notCompletedLetters.reduce((str, { letter, }) => str += letter, "");
+        completedKeysEl.textContent = strCompletedLetters;
+        notCompletedKeysEl.textContent = strNotCompletedLetters;
     }
 
-    _typing() {
+    addTyping() {
         const keyEls = document.querySelectorAll(".key[data-key]");
 
-        window.addEventListener("keydown", (e) => {
-            e.preventDefault();
+        window.addEventListener("keydown", (e) => this._typingHandler(e, keyEls));
+    }
 
-            if (this.end) {
-                return;
-            }
+    removeTyping() {
+        const keyEls = document.querySelectorAll(".key[data-key]");
 
-            const code = e.code;
-            const key = e.key;
-            const findMatchIdx = [...keyEls].findIndex((el) => el.dataset.key === code);
-            
-            if (findMatchIdx === -1) {
-                return;
-            }
-            
-            this._setPressedKey(keyEls, findMatchIdx);
-            this._checkTyping(key);
-        });
+        window.removeEventListener("keydown", (e) => this._typingHandler(e, keyEls));
+    }
+
+    _typingHandler(e, keyEls) {
+        if (this.end) {
+            return;
+        }
+
+        const code = e.code;
+        const key = e.key;
+        const findMatchIdx = [...keyEls].findIndex((el) => el.dataset.key === code);
+
+        if (findMatchIdx === -1) {
+            return;
+        }
+
+        this._setPressedKey(keyEls, findMatchIdx);
+        this._checkTyping(key);
     }
 
     init() {
-        this._fillTextData();
-        this._renderText();
         this._renderKeys();
-        this._renderCountCompletedLines();
-        this._typing();
         this._setRepeat();
+
+        return this;
     }
 }
