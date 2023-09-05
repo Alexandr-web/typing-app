@@ -8,8 +8,13 @@ export default class TypingLogic {
         this.progressLine = document.querySelector(".typing-workspace__progress-line-inner");
         this.countCompletedLinesEl = document.querySelector(".typing-workspace__progress-completed");
         this.canvasConfetti = document.querySelector("#confetti");
+        this.errorsEl = document.querySelector('.typing-workspace__statistic[data-statistic="errors"] .typing-workspace__statistic-item');
+        this.timeEl = document.querySelector('.typing-workspace__statistic[data-statistic="time"] .typing-workspace__statistic-item');
+        this.speedEl = document.querySelector('.typing-workspace__statistic[data-statistic="speed"] .typing-workspace__statistic-item');
         this.end = true;
-        this.text = "";
+        this.errors = 0;
+        this.speed = 0;
+        this.time = 0;
         this.textData = [];
         this.ignoreKeys = ["Tab", "CapsLock", "ShiftLeft", "ShiftRight", "ControlLeft", "ControlRight", "MetaLeft", "MetaRight", "AltLeft", "AltRight", "ContextMenu"];
     }
@@ -64,7 +69,7 @@ export default class TypingLogic {
             .reduce((acc, sentence, idx) => {
                 const letters = sentence
                     .split("")
-                    .map((letter, idx) => ({ letter, active: idx === 0, completed: false, }));
+                    .map((letter, index) => ({ letter, active: index === 0 && idx === 0, completed: false, }));
 
                 acc.push({
                     letters,
@@ -83,9 +88,9 @@ export default class TypingLogic {
     }
 
     _setPressedKey(els, idx) {
-        els.forEach((el) => el.classList.remove("key--pressed"));
+        els.forEach((el) => el.classList.remove("active"));
 
-        els[idx].classList.add("key--pressed");
+        els[idx].classList.add("active");
     }
 
     _setProgress() {
@@ -113,28 +118,37 @@ export default class TypingLogic {
         this.textData[0].letters[0].active = true;
 
         this.end = false;
+        this.errors = 0;
 
         this.canvasConfetti.classList.remove("show-opacity");
 
         this._setProgress();
         this._renderCountCompletedLines();
         this._renderText();
+        this._renderErrors();
+    }
+
+    _renderErrors() {
+        this.errorsEl.textContent = this.errors;
     }
 
     _checkTyping(pressedKey) {
         const findActiveIdxSentence = this.textData.findIndex(({ active, }) => active);
         const sentenceData = this.textData[findActiveIdxSentence];
         const findActiveIdxKey = sentenceData.letters.findIndex(({ active, }) => active);
-        const findKey = sentenceData.letters[findActiveIdxKey].letter;
+        const activeKey = sentenceData.letters[findActiveIdxKey].letter;
 
         if (this.ignoreKeys.includes(pressedKey)) {
             return;
         }
-        
+
         // TODO:
         // * Конец попытки на текущем предложении
         //   начинаем заново (только это предложение)
-        if (findKey !== pressedKey) {
+        if (activeKey !== pressedKey) {
+            this.errors += 1;
+            this._renderErrors();
+
             return;
         }
 
@@ -155,7 +169,6 @@ export default class TypingLogic {
                 this.textData[findActiveIdxSentence + 1].active = true;
                 this.textData[findActiveIdxSentence + 1].letters[0].active = true;
             } else {
-                console.log("finish");
                 this.canvasConfetti.classList.add("show-opacity");
     
                 this.end = true;
@@ -180,25 +193,20 @@ export default class TypingLogic {
         notCompletedKeysEl.textContent = strNotCompletedLetters;
     }
 
-    addTyping() {
-        const keyEls = document.querySelectorAll(".key[data-key]");
-
-        window.addEventListener("keydown", (e) => this._typingHandler(e, keyEls));
+    setTypingEvent(callback, add = true) {
+        const eMethod = add ? "addEventListener" : "removeEventListener";
+        
+        window[eMethod]("keydown", callback);
     }
 
-    removeTyping() {
-        const keyEls = document.querySelectorAll(".key[data-key]");
-
-        window.removeEventListener("keydown", (e) => this._typingHandler(e, keyEls));
-    }
-
-    _typingHandler(e, keyEls) {
+    typingHandler(e) {
         e.preventDefault();
 
         if (this.end) {
             return;
         }
 
+        const keyEls = document.querySelectorAll(".key[data-key]");
         const code = e.code;
         const key = e.key;
         const findMatchIdx = [...keyEls].findIndex((el) => el.dataset.key === code);

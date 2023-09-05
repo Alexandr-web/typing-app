@@ -41,26 +41,62 @@ h6 {
 .finger {
     &1 {
         background-color: $finger1;
+
+        &.active {
+            box-shadow: inset 0 0px 0px 3px $finger1Saturated;
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
     
     &2 {
         background-color: $finger2;
+
+        &.active {
+            box-shadow: inset 0 0px 0px 3px $finger2Saturated;
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
 
     &3 {
         background-color: $finger3;
+
+        &.active {
+            box-shadow: inset 0 0px 0px 3px $finger3Saturated;
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
 
     &4 {
         background-color: $finger4;
+
+        &.active {
+            box-shadow: inset 0 0px 0px 3px $finger4Saturated;
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
 
     &5 {
         background-color: $finger5;
+
+        &active {
+            box-shadow: inset 0 0px 0px 3px $finger5Saturated;
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
 
     &6 {
         background-color: $finger6;
+
+        &.active {
+            box-shadow: inset 0 0px 0px 3px $finger6Saturated;
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
 }
 

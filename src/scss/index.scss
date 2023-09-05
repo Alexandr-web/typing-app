@@ -85,12 +85,34 @@
 .typing-workspace {
     &__top {
         display: grid;
-        grid-template-columns: .2fr 1fr;
+        grid-template-columns: .2fr 1fr .2fr;
+        gap: 10px;
     }
 
     &__fingers {
         display: flex;
         flex-direction: column;
+    }
+
+    &__statistic {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px;
+        font-size: 14px;
+        border-bottom: 1px solid $lightGrey;
+        padding-bottom: 5px;
+        font-weight: 500;
+    }
+
+    &__statistics {
+        &-list {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            gap: 10px;
+        }
     }
 
     &__list-lines {
@@ -146,6 +168,10 @@
 
         &-text {
             padding-right: 10px;
+            padding: 10px;
+            background-color: $light;
+            border-radius: 5px;
+            margin-right: 5px;
 
             &-num {
                 font-size: 12px;
