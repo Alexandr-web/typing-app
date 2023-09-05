@@ -292,6 +292,11 @@
         font-size: 14px;
         border: 1px solid $lightGrey;
         color: $lightGrey;
+
+        &.active {
+            opacity: .7;
+            transform: scale(0.98);
+        }
     }
 
     &--pressed {

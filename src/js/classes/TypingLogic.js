@@ -132,6 +132,19 @@ export default class TypingLogic {
         this.errorsEl.textContent = this.errors;
     }
 
+    _startSentenceAgain(activeSentenceIdx) {
+        this.textData[activeSentenceIdx].letters.forEach((letter, idx) => {
+            letter.active = idx === 0;
+            letter.completed = false;
+        });
+    }
+
+    _clearKeysAtSentenceByIndex(idx) {
+        const sentenceData = this.textData[idx];
+        
+        this._splitSentenceInHTML(idx, sentenceData);
+    }
+
     _checkTyping(pressedKey) {
         const findActiveIdxSentence = this.textData.findIndex(({ active, }) => active);
         const sentenceData = this.textData[findActiveIdxSentence];
@@ -147,7 +160,12 @@ export default class TypingLogic {
         //   начинаем заново (только это предложение)
         if (activeKey !== pressedKey) {
             this.errors += 1;
+
             this._renderErrors();
+            this._startSentenceAgain(findActiveIdxSentence);
+            this._renderCountCompletedLines();
+            this._clearKeysAtSentenceByIndex(findActiveIdxSentence);
+            this._setProgress();
 
             return;
         }
