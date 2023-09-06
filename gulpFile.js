@@ -26,17 +26,6 @@ const config = {
         watchSrc: `${srcDir}/**/*.html`,
         to: `${buildDir}/`,
     },
-    sounds: {
-        from: `${srcDir}/sounds/**/*`,
-        watchSrc: `${srcDir}/sounds/**/*`,
-        to: `${buildDir}/sounds`
-    },
-};
-
-const soundsTask = () => {
-    return src(config.sounds.from)
-        .pipe(dest(config.sounds.to))
-        .pipe(browserSync.stream());
 };
 
 const stylesTask = () => {
@@ -70,7 +59,6 @@ const watching = () => {
     watch(config.js.watchSrc, parallel(jsTask));
     watch(config.styles.watchSrc, parallel(stylesTask));
     watch(config.html.watchSrc, parallel(htmlTask));
-    watch(config.sounds.watchSrc, parallel(soundsTask));
 };
 
 const server = () => {
@@ -81,5 +69,5 @@ const server = () => {
     });
 };
 
-exports.build = parallel(htmlTask, stylesTask, jsTask, soundsTask);
-exports.default = parallel(htmlTask, stylesTask, jsTask, soundsTask, watching, server);
+exports.build = parallel(htmlTask, stylesTask, jsTask);
+exports.default = parallel(htmlTask, stylesTask, jsTask, watching, server);

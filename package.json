@@ -26,6 +26,8 @@
     "webpack-stream": "^7.0.0"
   },
   "dependencies": {
-    "confetti-js": "0.0.18"
+    "confetti-js": "0.0.18",
+    "resize-observer-polyfill": "^1.5.1",
+    "simplebar": "^6.2.5"
   }
 }

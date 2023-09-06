@@ -1,4 +1,3 @@
-import Sound from "./Sound";
 import Timer from "./Timer";
 
 import keys from "../helpers/keys";
@@ -14,7 +13,6 @@ export default class TypingLogic {
         this.errorsEl = document.querySelector('.typing-workspace__statistic[data-statistic="errors"] .typing-workspace__statistic-item');
         this.timeEl = document.querySelector('.typing-workspace__statistic[data-statistic="time"] .typing-workspace__statistic-item');
         this.speedEl = document.querySelector('.typing-workspace__statistic[data-statistic="speed"] .typing-workspace__statistic-item');
-        this.sound = new Sound().init();
         this.timer = new Timer().init();
         this.end = true;
         this.errors = 0;
@@ -142,6 +140,7 @@ export default class TypingLogic {
 
         this.end = false;
         this.errors = 0;
+        this.speed = 0;
 
         this.canvasConfetti.classList.remove("show-opacity");
 
@@ -149,7 +148,14 @@ export default class TypingLogic {
         this._renderCountCompletedLines();
         this._renderText();
         this._renderErrors();
+        this._renderSpeed();
         this.timer.stopAndClear();
+    }
+
+    _scrollToNextSentence(idxNextSentence) {
+        const sentenceEl = document.querySelector(`.typing-workspace__line[data-line-idx="${idxNextSentence}"]`);
+
+        sentenceEl.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     _startSentenceAgain(activeSentenceIdx) {
@@ -203,6 +209,8 @@ export default class TypingLogic {
                 // Включаем следующее активное предложение и букву
                 this.textData[findActiveIdxSentence + 1].active = true;
                 this.textData[findActiveIdxSentence + 1].letters[0].active = true;
+
+                this._scrollToNextSentence(findActiveIdxSentence + 1);
             } else {
                 this.canvasConfetti.classList.add("show-opacity");
     
@@ -256,13 +264,14 @@ export default class TypingLogic {
             return;
         }
 
-        this.sound.play();
         this._setPressedKey(keyEls, findMatchIdx);
         this._checkTyping(key);
     }
 
     init() {
         this._renderKeys();
+        this._renderSpeed();
+        this._renderErrors();
         this._setRepeat();
 
         return this;

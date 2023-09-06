@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Oswald:wght@400;600&display=swap');
 @import "../../node_modules/normalize.css/normalize.css";
+@import "../../node_modules/simplebar/dist/simplebar.min.css";
 @import "./_vars";
 
 *,
@@ -29,6 +30,10 @@ h4,
 h5,
 h6 {
     margin: 0;
+}
+
+.simplebar-scrollbar::before {
+    background-color: $lightGrey;
 }
 
 .container {
