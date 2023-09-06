@@ -1,3 +1,4 @@
+import SpeedTimer from "./SpeedTimer";
 import Timer from "./Timer";
 
 import keys from "../helpers/keys";
@@ -13,7 +14,8 @@ export default class TypingLogic {
         this.errorsEl = document.querySelector('.typing-workspace__statistic[data-statistic="errors"] .typing-workspace__statistic-item');
         this.timeEl = document.querySelector('.typing-workspace__statistic[data-statistic="time"] .typing-workspace__statistic-item');
         this.speedEl = document.querySelector('.typing-workspace__statistic[data-statistic="speed"] .typing-workspace__statistic-item');
-        this.timer = new Timer().init();
+        this.speedTimer = new SpeedTimer().init();
+        this.timer = new Timer();
         this.end = true;
         this.errors = 0;
         this.textData = [];
@@ -66,7 +68,7 @@ export default class TypingLogic {
 
     _renderSpeed() {
         const completedLetters = this._getCountCompletedLetters();
-        const min = (this.timer.sec / 60) || 1;
+        const min = (this.speedTimer.sec / 60) || 1;
         const speed = Math.round(completedLetters / min);
         
         this.speedEl.textContent = `${speed} (сим/мин)`;
@@ -149,7 +151,7 @@ export default class TypingLogic {
         this._renderText();
         this._renderErrors();
         this._renderSpeed();
-        this.timer.stopAndClear();
+        this.speedTimer.stopAndClear();
     }
 
     _scrollToNextSentence(idxNextSentence) {
@@ -190,6 +192,8 @@ export default class TypingLogic {
             this._clearKeysAtSentenceByIndex(findActiveIdxSentence);
             this._setProgress();
 
+            this.timer.start();
+
             return;
         }
 
@@ -210,11 +214,12 @@ export default class TypingLogic {
                 this.textData[findActiveIdxSentence + 1].active = true;
                 this.textData[findActiveIdxSentence + 1].letters[0].active = true;
 
+                this.speedTimer.stop();
                 this._scrollToNextSentence(findActiveIdxSentence + 1);
             } else {
                 this.canvasConfetti.classList.add("show-opacity");
     
-                this.timer.stop();
+                this.speedTimer.stop();
                 this.end = true;
             }
         }
@@ -247,12 +252,12 @@ export default class TypingLogic {
     typingHandler(e) {
         e.preventDefault();
 
-        if (this.end) {
+        if (this.end || this.timer.isStarted) {
             return;
         }
 
-        if (!this.timer.isStarted) {
-            this.timer.start();
+        if (!this.speedTimer.isStarted) {
+            this.speedTimer.start();
         }
 
         const keyEls = document.querySelectorAll(".key[data-key]");

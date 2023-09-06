@@ -1,71 +1,54 @@
 export default class Timer {
     constructor() {
-        this.timerEl = document.querySelector('.typing-workspace__statistic[data-statistic="time"] .typing-workspace__statistic-item');
+        this.timerModalWindow = document.querySelector(".timer");
+        this.timerEl = document.querySelector(".timer__text");
+        this.progressEl = document.querySelector(".timer__progress-line");
+        this.sec = 3;
         this.timer = null;
-        this.sec = 0;
         this.isStarted = false;
     }
 
-    _getSTRTime(duration) {
-        let hours = Math.floor(duration / 3600);
-        let min = Math.floor((duration - (hours * 3600)) / 60);
-        let sec = Math.floor(duration - (hours * 3600) - (min * 60));
-    
-        if (hours < 10) {
-            hours = `0${hours}`;
-        }
-    
-        if (min < 10) {
-            min = `0${min}`;
-        }
-    
-        if (sec < 10) {
-            sec = `0${sec}`;
-        }
-    
-        return `${hours > 0 ? hours + ":" : ""}${min}:${sec}`;
+    _setProgress() {
+        const progress = (this.sec / 3) * 100;
+
+        this.progressEl.style.width = `${progress}%`;
     }
 
     _renderTime() {
-        this.timerEl.textContent = this._getSTRTime(this.sec);
+        this.timerEl.textContent = this.sec;
     }
 
-    _timerLogic() {
-        this.sec += 1;
-        
+    _stop() {
+        clearInterval(this.timer);
+
+        this._hide();
+        this.isStarted = false;
+    }
+
+    _timerHandler() {
+        if (this.sec <= 0) {
+            return this._stop();
+        }
+
+        this.sec -= 1;
+
+        this._renderTime();
+        this._setProgress();
+    }
+
+    _hide() {
+        this.sec = 3;
+        this.timerModalWindow.classList.remove("show--flex");
+
         this._renderTime();
     }
 
     start() {
-        this.timer = setInterval(this._timerLogic.bind(this), 1000);
+        this.timerModalWindow.classList.add("show--flex");
 
+        this._setProgress();
         this.isStarted = true;
-    }
 
-    stop() {
-        clearInterval(this.timer);
-
-        this.isStarted = false;
-    }
-
-    stopAndClear() {
-        this.stop();
-
-        this.sec = 0;
-
-        this._renderTime();
-    }
-
-    clear() {
-        this.sec = 0;
-        this.isStarted = false;
-        
-        this._renderTime();
-    }
-
-    init() {
-        this._renderTime();
-
-        return this;
+        this.timer = setInterval(this._timerHandler.bind(this), 1000);
     }
 }
