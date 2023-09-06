@@ -18,8 +18,6 @@ export default class TypingLogic {
         this.timer = new Timer().init();
         this.end = true;
         this.errors = 0;
-        this.speed = 0;
-        this.time = 0;
         this.textData = [];
         this.ignoreKeys = ["Tab", "CapsLock", "ShiftLeft", "ShiftRight", "ControlLeft", "ControlRight", "MetaLeft", "MetaRight", "AltLeft", "AltRight", "ContextMenu"];
     }
@@ -68,6 +66,18 @@ export default class TypingLogic {
         });
     }
 
+    _renderSpeed() {
+        const completedLetters = this._getCountCompletedLetters();
+        const min = (this.timer.sec / 60) || 1;
+        const speed = Math.round(completedLetters / min);
+        
+        this.speedEl.textContent = `${speed} (сим/мин)`;
+    }
+
+    _renderErrors() {
+        this.errorsEl.textContent = this.errors;
+    }
+
     fillTextData(text) {
         this.textData = text
             .split("\n")
@@ -98,9 +108,17 @@ export default class TypingLogic {
         els[idx].classList.add("active");
     }
 
+    _getCountCompletedLetters() {
+        return this.textData.reduce((count, { letters, }) => count += letters.filter(({ completed, }) => completed).length, 0);
+    }
+
+    _getCountAllLetters() {
+        return this.textData.reduce((count, { letters }) => count += letters.length, 0);
+    }
+
     _setProgress() {
-        const completedLetters = this.textData.reduce((count, { letters, }) => count += letters.filter(({ completed, }) => completed).length, 0);
-        const allLetters = this.textData.reduce((count, { letters }) => count += letters.length, 0);
+        const completedLetters = this._getCountCompletedLetters();
+        const allLetters = this._getCountAllLetters();
         const progress = (completedLetters / allLetters) * 100;
 
         this.progressLine.style.width = `${progress}%`;
@@ -132,10 +150,6 @@ export default class TypingLogic {
         this._renderText();
         this._renderErrors();
         this.timer.stopAndClear();
-    }
-
-    _renderErrors() {
-        this.errorsEl.textContent = this.errors;
     }
 
     _startSentenceAgain(activeSentenceIdx) {
@@ -200,6 +214,7 @@ export default class TypingLogic {
         this._setProgress();
         this._renderCountCompletedLines();
         this._splitSentenceInHTML(findActiveIdxSentence, sentenceData);
+        this._renderSpeed();
     }
 
     _splitSentenceInHTML(idxLine, sentenceData) {

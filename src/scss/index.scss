@@ -85,7 +85,7 @@
 .typing-workspace {
     &__top {
         display: grid;
-        grid-template-columns: .2fr 1fr .2fr;
+        grid-template-columns: .2fr 1fr .4fr;
         gap: 10px;
     }
 
@@ -95,21 +95,29 @@
     }
 
     &__statistic {
+        font-family: 'Oswald', sans-serif;
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 5px;
-        font-size: 14px;
-        border-bottom: 1px solid $lightGrey;
-        padding-bottom: 5px;
+        font-size: 16px;
         font-weight: 500;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $lightGrey;
+            padding-bottom: 5px;
+        }
+
+        &-item {
+            font-weight: 600;
+            font-size: 18px;
+        }
     }
 
     &__statistics {
         &-list {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             height: 100%;
             gap: 10px;
         }
@@ -190,6 +198,8 @@
     &__text-wrapper {
         box-shadow: inset 0 5px 5px -4px $lightGrey;
         padding: 10px;
+        overflow: auto;
+        max-height: 250px;
     }
 
     &__bottom {
