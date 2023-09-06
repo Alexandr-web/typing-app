@@ -183,6 +183,11 @@
             display: block;
             width: 100%;
 
+            &-active {
+                background-color: $purple;
+                color: $white;
+            }
+
             &-num {
                 font-size: 12px;
                 color: $redGrey;

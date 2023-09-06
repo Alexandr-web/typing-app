@@ -19,7 +19,7 @@ export default class TypingLogic {
         this.end = true;
         this.errors = 0;
         this.textData = [];
-        this.ignoreKeys = ["Tab", "CapsLock", "ShiftLeft", "ShiftRight", "ControlLeft", "ControlRight", "MetaLeft", "MetaRight", "AltLeft", "AltRight", "ContextMenu"];
+        this.ignoreKeys = ["Tab", "CapsLock", "Shift", "Control", "Meta", "Alt", "ContextMenu"];
     }
 
     _renderCountCompletedLines() {
@@ -178,7 +178,7 @@ export default class TypingLogic {
         const sentenceData = this.textData[findActiveIdxSentence];
         const findActiveIdxKey = sentenceData.letters.findIndex(({ active, }) => active);
         const activeKey = sentenceData.letters[findActiveIdxKey].letter;
-
+        
         if (this.ignoreKeys.includes(pressedKey)) {
             return;
         }
@@ -238,9 +238,11 @@ export default class TypingLogic {
         const notCompletedLetters = sentenceData.letters.filter(({ completed, }) => !completed);
         const strCompletedLetters = completedLetters.reduce((str, { letter, }) => str += letter, "");
         const strNotCompletedLetters = notCompletedLetters.reduce((str, { letter, }) => str += letter, "");
+        const lettersExceptFirst = strNotCompletedLetters.split("").slice(1).join("");
+        const firstLetterNotCompletedLetters = strNotCompletedLetters[0] || "";
 
         completedKeysEl.textContent = strCompletedLetters;
-        notCompletedKeysEl.textContent = strNotCompletedLetters;
+        notCompletedKeysEl.innerHTML = `<span class="typing-workspace__line-text-active">${firstLetterNotCompletedLetters}</span>${lettersExceptFirst}`;
     }
 
     setTypingEvent(callback, add = true) {
