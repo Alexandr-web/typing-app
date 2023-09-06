@@ -1,3 +1,6 @@
+import Sound from "./Sound";
+import Timer from "./Timer";
+
 import keys from "../helpers/keys";
 
 export default class TypingLogic {
@@ -11,6 +14,8 @@ export default class TypingLogic {
         this.errorsEl = document.querySelector('.typing-workspace__statistic[data-statistic="errors"] .typing-workspace__statistic-item');
         this.timeEl = document.querySelector('.typing-workspace__statistic[data-statistic="time"] .typing-workspace__statistic-item');
         this.speedEl = document.querySelector('.typing-workspace__statistic[data-statistic="speed"] .typing-workspace__statistic-item');
+        this.sound = new Sound().init();
+        this.timer = new Timer().init();
         this.end = true;
         this.errors = 0;
         this.speed = 0;
@@ -126,6 +131,7 @@ export default class TypingLogic {
         this._renderCountCompletedLines();
         this._renderText();
         this._renderErrors();
+        this.timer.stopAndClear();
     }
 
     _renderErrors() {
@@ -155,9 +161,6 @@ export default class TypingLogic {
             return;
         }
 
-        // TODO:
-        // * Конец попытки на текущем предложении
-        //   начинаем заново (только это предложение)
         if (activeKey !== pressedKey) {
             this.errors += 1;
 
@@ -189,6 +192,7 @@ export default class TypingLogic {
             } else {
                 this.canvasConfetti.classList.add("show-opacity");
     
+                this.timer.stop();
                 this.end = true;
             }
         }
@@ -224,6 +228,10 @@ export default class TypingLogic {
             return;
         }
 
+        if (!this.timer.isStarted) {
+            this.timer.start();
+        }
+
         const keyEls = document.querySelectorAll(".key[data-key]");
         const code = e.code;
         const key = e.key;
@@ -233,6 +241,7 @@ export default class TypingLogic {
             return;
         }
 
+        this.sound.play();
         this._setPressedKey(keyEls, findMatchIdx);
         this._checkTyping(key);
     }
