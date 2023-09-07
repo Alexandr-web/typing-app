@@ -1,8 +1,10 @@
 export default class Timer {
-    constructor() {
+    constructor(callbackWhenStart, callbackWhenStop) {
         this.timerModalWindow = document.querySelector(".timer");
         this.timerEl = document.querySelector(".timer__text");
         this.progressEl = document.querySelector(".timer__progress-line");
+        this.callbackWhenStart = callbackWhenStart;
+        this.callbackWhenStop = callbackWhenStop;
         this.sec = 3;
         this.timer = null;
         this.isStarted = false;
@@ -22,6 +24,7 @@ export default class Timer {
         clearInterval(this.timer);
 
         this._hide();
+        this.callbackWhenStop instanceof Function && this.callbackWhenStop();
         this.isStarted = false;
     }
 
@@ -48,7 +51,7 @@ export default class Timer {
 
         this._setProgress();
         this.isStarted = true;
-
+        this.callbackWhenStart instanceof Function && this.callbackWhenStart();
         this.timer = setInterval(this._timerHandler.bind(this), 1000);
     }
 }

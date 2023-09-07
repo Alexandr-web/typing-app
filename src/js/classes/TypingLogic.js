@@ -15,7 +15,7 @@ export default class TypingLogic {
         this.timeEl = document.querySelector('.typing-workspace__statistic[data-statistic="time"] .typing-workspace__statistic-item');
         this.speedEl = document.querySelector('.typing-workspace__statistic[data-statistic="speed"] .typing-workspace__statistic-item');
         this.speedTimer = new SpeedTimer().init();
-        this.timer = new Timer();
+        this.timer = new Timer(this.speedTimer.stop.bind(this.speedTimer), this.speedTimer.start.bind(this.speedTimer));
         this.end = true;
         this.errors = 0;
         this.textData = [];
@@ -100,6 +100,7 @@ export default class TypingLogic {
 
         this._renderText();
         this._renderCountCompletedLines();
+        this._scrollToNextSentence(0);
     }
 
     _setPressedKey(els, idx) {
@@ -151,6 +152,7 @@ export default class TypingLogic {
         this._renderText();
         this._renderErrors();
         this._renderSpeed();
+        this._scrollToNextSentence(0);
         this.speedTimer.stopAndClear();
     }
 

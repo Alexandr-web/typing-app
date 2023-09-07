@@ -124,7 +124,6 @@
     }
 
     &__list-lines {
-        gap: 5px;
         display: flex;
         flex-direction: column;
     }
@@ -171,8 +170,8 @@
 
     &__line {
         display: flex;
-        align-items: first baseline;
         justify-content: space-between;
+        padding: 10px 0;
 
         &-text {
             padding-right: 10px;
